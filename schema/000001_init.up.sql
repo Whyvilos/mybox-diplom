@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id_user serial not null unique,
-    mail    varchar(255) not null,
-    name    varchar(255) not null,
+    mail    varchar(255) not null, --СДЕЛАТЬ УНИКАЛЬНЫМ
+    name    varchar(255) not null, 
     username    varchar(255) not null unique,
     password_hash   varchar(255) not null,
     phone_number    varchar(255),
@@ -11,11 +11,17 @@ CREATE TABLE users (
 CREATE TABLE items (
     id_item         serial not null unique,
     title           varchar(128) not null,
-    discription     varchar(255) not null,
+    description     varchar(255) not null,
     status          varchar(16) not null,
     count           int,
     price           int
 );
+
+CREATE TABLE followers (
+    id_user     int references users (id_user) on delete cascade not null,
+    id_user_follower     int references users (id_user) on delete cascade not null
+);
+
 
 CREATE TABLE users_items (
     id          serial not null unique,
@@ -30,7 +36,7 @@ CREATE TABLE favorite (
 
 CREATE TABLE posts (
     id_post         serial not null unique,
-    discription     varchar(255) not null,
+    description     varchar(255) not null,
     creation_time   timestamptz not null,
     id_item         int references items (id_item),
     price           int

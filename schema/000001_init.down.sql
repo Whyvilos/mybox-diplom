@@ -14,6 +14,8 @@ DROP TABLE users_items;
 
 DROP TABLE items;
 
+DROP TABLE followers;
+
 DROP TABLE users;
 
 
