@@ -7,11 +7,20 @@ import (
 )
 
 const (
-	usersTable      = "users"
-	itemsTable      = "items"
-	usersItemsTable = "users_items"
-	postsTable      = "posts"
-	usersPostsTable = "users_posts"
+	usersTable        = "users"
+	itemsTable        = "items"
+	usersItemsTable   = "users_items"
+	postsTable        = "posts"
+	usersPostsTable   = "users_posts"
+	followersTable    = "followers"
+	favoriteTable     = "favorite"
+	ordersTable       = "orders"
+	noticesTable      = "notifications"
+	usersOrdersTable  = "users_orders"
+	usersNoticesTable = "users_notifications"
+	chatsTable        = "chats"
+	usersChatsTable   = "users_chats"
+	messagesTable     = "messages"
 )
 
 type Config struct {
@@ -33,6 +42,5 @@ func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return db, nil
 }

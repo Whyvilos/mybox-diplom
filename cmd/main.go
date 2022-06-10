@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+
 	if err := initConfig(); err != nil {
 		logrus.Fatalf("ERROR config: %s", err.Error())
 	}
@@ -33,9 +34,9 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("ERROR DB: %s", err.Error())
 	}
-
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
+	//services := service.NewServiceSecond(repos) //новый сервис
 	handlers := handler.NewHandler(services)
 
 	srv := new(mybox.Server)

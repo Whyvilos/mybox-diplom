@@ -14,11 +14,13 @@ type getAllItemsResponse struct {
 }
 
 func (h *Handler) createItem(c *gin.Context) {
+
 	userId, err := getUserId(c)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+
 	id_catalog, err := strconv.Atoi(c.Param("id_user"))
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -69,7 +71,20 @@ func (h *Handler) getAllItems(c *gin.Context) {
 
 }
 
-func (h *Handler) getItemById(c *gin.Context) {}
+func (h *Handler) getItemById(c *gin.Context) {
+	id_item, err := strconv.Atoi(c.Param("id_item"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "GetItem: "+"invalid id param")
+		return
+	}
+	item, err := h.services.Catalog.GetById(id_item)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "GetItem: "+err.Error())
+		return
+	}
+	newAnswerResponse(http.StatusOK, fmt.Sprintf("GET api/:id/catalog/%d", id_item))
+	c.JSON(http.StatusOK, item)
+}
 
 func (h *Handler) updateItem(c *gin.Context) {}
 

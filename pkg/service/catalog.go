@@ -20,3 +20,19 @@ func (s *CatalogService) GetAll(id_catalog int) ([]mybox.SimpleItem, error) {
 func (s *CatalogService) CreateItem(userId int, input mybox.Item) (int, error) {
 	return s.repo.CreateItem(userId, input)
 }
+
+func (s *CatalogService) AddFavorite(userId, itemId int) error {
+	return s.repo.AddFavorite(userId, itemId)
+}
+
+func (s *CatalogService) CheckFavorite(userId, itemId int) (bool, error) {
+	return s.repo.CheckFavorite(userId, itemId)
+}
+
+func (s *CatalogService) GetById(id_item int) (mybox.Item, error) {
+	return s.repo.GetById(id_item)
+}
+
+func (s *CatalogService) DeleteFavorite(userId, itemId int) error {
+	return s.repo.DeleteFavorite(userId, itemId)
+}

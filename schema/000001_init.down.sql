@@ -1,3 +1,7 @@
+DROP TABLE users_orders;
+
+DROP TABLE orders;
+
 DROP TABLE notifications_status;
 
 DROP TABLE users_notifications;
