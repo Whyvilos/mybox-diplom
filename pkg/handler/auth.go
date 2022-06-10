@@ -21,7 +21,9 @@ func (h *Handler) signUp(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, fmt.Sprintf("CreateUser: %s", err.Error()))
 		return
 	}
+
 	newAnswerResponse(http.StatusOK, "POST auth/sign-up")
+
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
@@ -52,14 +54,14 @@ func (h *Handler) signIn(c *gin.Context) {
 		"token": token,
 	})
 }
-func (h *Handler) testAuth(c *gin.Context) {
+func (h *Handler) ping(c *gin.Context) {
 
 	id, _ := c.Get("userId")
 	usId := id.(int)
 	newAnswerResponse(http.StatusOK, fmt.Sprintf("GET api/test id:%d", usId))
 
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"ping": "АВТОРИЗОВАН",
+		"ping": true,
 	})
 }
 

@@ -11,6 +11,10 @@ import (
 	"github.com/whyvilos/mybox/pkg/repository"
 )
 
+type AuthService struct {
+	repo repository.Authorization
+}
+
 const (
 	salt      = "svcbgjhkjytrdcvbnm"
 	signinKey = "sfgijasdnfkasmfkgofsom"
@@ -20,10 +24,6 @@ const (
 type tokenClaims struct {
 	jwt.StandardClaims
 	UserId int `json:"user_id"`
-}
-
-type AuthService struct {
-	repo repository.Authorization
 }
 
 func NewAuthService(repo repository.Authorization) *AuthService {
@@ -36,7 +36,6 @@ func (s *AuthService) CreateUser(user mybox.User) (int, error) {
 }
 
 func (s *AuthService) GenerateToken(username, password string) (string, error) {
-
 	user, err := s.repo.GetUser(username, s.generatePasswordHash(password))
 	if err != nil {
 		return "", err
@@ -51,8 +50,13 @@ func (s *AuthService) GenerateToken(username, password string) (string, error) {
 	return token.SignedString([]byte(signinKey))
 }
 
-func (s *AuthService) ParseToken(_token string) (int, error) {
+func (s *AuthService) generatePasswordHash(pass string) string {
+	hash := sha1.New()
+	hash.Write([]byte(pass))
+	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
 
+func (s *AuthService) ParseToken(_token string) (int, error) {
 	token, err := jwt.ParseWithClaims(_token, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
@@ -63,17 +67,9 @@ func (s *AuthService) ParseToken(_token string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-
 	claims, ok := token.Claims.(*tokenClaims)
 	if !ok {
 		return 0, errors.New("token claims are not of type *tokenClaims")
 	}
-
 	return claims.UserId, nil
-}
-
-func (s *AuthService) generatePasswordHash(pass string) string {
-	hash := sha1.New()
-	hash.Write([]byte(pass))
-	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }

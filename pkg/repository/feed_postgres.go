@@ -25,8 +25,8 @@ func (r *FeedPostgres) CreatePost(id_user int, post mybox.Post) (int, error) {
 
 	var id_post int
 
-	createItemQuery := fmt.Sprintf("INSERT INTO %s (description, creation_time) VALUES ($1, $2) RETURNING id_post", postsTable)
-	row := tx.QueryRow(createItemQuery, post.Description, post.Creation_time)
+	createItemQuery := fmt.Sprintf("INSERT INTO %s (description, url_media, creation_time) VALUES ($1, $2, $3) RETURNING id_post", postsTable)
+	row := tx.QueryRow(createItemQuery, post.Description, post.Media, post.Creation_time)
 	if err := row.Scan(&id_post); err != nil {
 		tx.Rollback()
 		return 0, err
@@ -46,8 +46,8 @@ func (r *FeedPostgres) GetAll(id_feed int) ([]mybox.Post, error) {
 
 	var posts []mybox.Post
 
-	query := fmt.Sprintf("SELECT pt.id_post, pt.description, pt.creation_time FROM %s pt INNER JOIN %s upt on pt.id_post = upt.id_post WHERE upt.id_user = $1",
-		postsTable, usersPostsTable)
+	query := fmt.Sprintf("SELECT pt.id_post, pt.description, pt.url_media, pt.creation_time, upt.id_user, ut.username FROM %s pt INNER JOIN %s upt on pt.id_post = upt.id_post INNER JOIN %s ut on ut.id_user=upt.id_user WHERE upt.id_user = $1 ORDER BY pt.id_post DESC",
+		postsTable, usersPostsTable, usersTable)
 	err := r.db.Select(&posts, query, id_feed)
 
 	return posts, err
